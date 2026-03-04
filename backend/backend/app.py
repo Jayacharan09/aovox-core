@@ -1,20 +1,17 @@
-"""
-AOVOX Core Application Entry Point
-"""
-
-from orchestrator import Orchestrator
-
-def main():
-    print("AOVOX Core Engine Initialized")
-
-    user_input = input("Enter your request: ")
-
-    orchestrator = Orchestrator()
-    response = orchestrator.process(user_input)
-
-    print("\nAOVOX Response:")
-    print(response)
+from fastapi import FastAPI
+from pydantic import BaseModel
+from orchestrator import AOVOXOrchestrator
 
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+orchestrator = AOVOXOrchestrator()
+
+
+class UserRequest(BaseModel):
+    message: str
+
+
+@app.post("/chat")
+def chat(request: UserRequest):
+    response = orchestrator.process(request.message)
+    return {"response": response}
