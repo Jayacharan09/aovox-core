@@ -1,14 +1,34 @@
-"""
-Agent Routing Logic
-"""
+def route_to_agent(user_input: str) -> str:
+    """
+    Simple routing logic.
+    Later this becomes advanced multi-agent routing.
+    """
 
-class GeneralAgent:
-    def execute(self, user_input: str) -> str:
-        return f"Processed by General Agent: {user_input}"
+    user_input_lower = user_input.lower()
 
+    if "security" in user_input_lower or "vulnerability" in user_input_lower:
+        return f"""
+        You are AOVOX Security Agent.
+        Provide a structured cybersecurity-focused answer.
 
-class AgentRouter:
+        User Query:
+        {user_input}
+        """
 
-    def get_agent(self, intent: str):
-        # Future: advanced routing logic
-        return GeneralAgent()
+    elif "research" in user_input_lower:
+        return f"""
+        You are AOVOX Research Agent.
+        Provide deep analytical and structured insights.
+
+        User Query:
+        {user_input}
+        """
+
+    else:
+        return f"""
+        You are AOVOX General Intelligence Agent.
+        Provide a clear and intelligent response.
+
+        User Query:
+        {user_input}
+        """
