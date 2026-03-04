@@ -1,32 +1,28 @@
-"""
-AOVOX Orchestration Engine
-"""
+from providers.provider_factory import get_provider
+from agent_router import route_to_agent
 
-class Orchestrator:
 
-    def __init__(self):
-        print("Orchestrator Initialized")
+class AOVOXOrchestrator:
+    """
+    Central brain of AOVOX.
+    Decides:
+    - Which agent to use
+    - Which provider to use
+    - How to execute the request
+    """
+
+    def __init__(self, provider_name: str = "openai"):
+        self.provider = get_provider(provider_name)
 
     def process(self, user_input: str) -> str:
         """
-        Core orchestration pipeline
+        Main entry point for handling user input.
         """
 
-        # Step 1: Analyze intent
-        intent = self._analyze_intent(user_input)
+        # Step 1: Determine which agent should handle this
+        agent_prompt = route_to_agent(user_input)
 
-        # Step 2: Select agent
-        agent = self._select_agent(intent)
-
-        # Step 3: Execute
-        response = agent.execute(user_input)
+        # Step 2: Send final prompt to AI provider
+        response = self.provider.generate(agent_prompt)
 
         return response
-
-    def _analyze_intent(self, user_input: str) -> str:
-        return "general"
-
-    def _select_agent(self, intent: str):
-        from agent_router import AgentRouter
-        router = AgentRouter()
-        return router.get_agent(intent)
